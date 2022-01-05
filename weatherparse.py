@@ -16,26 +16,24 @@ def GetWeatherToday(city):
         'wind' : w.wind(),
     }
 
-def GetWeatherTommorow(city = "Moscow"):
+def GetWeatherTommorow(city = "Novosibirsk"):
     weatherToken = configForWeather['API_WEATHER']
     s_city = city
-    city_id = 0
     try:
-        result = requests.get("https://api.openweathermap.org/data/2.5/find?",
+        resultforecast = requests.get("http://api.openweathermap.org/data/2.5/forecast",
         params={'q': s_city, 'units': 'metric', 'lang': 'ru', 'APPID': weatherToken})
-        resforecast = requests.get("http://api.openweathermap.org/data/2.5/forecast",
-        params={'q': s_city, 'units': 'metric', 'lang': 'ru', 'APPID': weatherToken})
-        data = result.json()
-        #dataForecast = result.
-        cities = ["{} ({})".format(d['name'], d['sys']['country']) for d in data['list']]
-        city_id = data['list'][0]['id']
-        temp = data['list'][0]['main']['temp']
-        print('city:', cities)
-        print('id:', city_id)
-        print('temp:', temp)
-        #for i in data['list']:
-            #print( i['dt_txt'], '{0:+3.0f}'.format(i['main']['temp']), i['weather'][0]['description'] )
-        print(resforecast.url)
+        data = resultforecast.json()
+        dataToday = data['list'][0]['main']
+        dataTommorow = data['list'][3]['main']
+        tempToday = dataToday['temp']
+        tempTommorow = dataTommorow['temp']
+        dateToday = data['list'][0]['dt_txt'][:10]
+        dateTommorow = data['list'][3]['dt_txt'][:10]
+        #dateTommorow1 = data['list'][11]['dt_txt'][:10] +3 первому дню +8 к последующим
+        print('city:', s_city)
+        print(dateToday, 'temp:', tempToday)
+        print(dateTommorow, 'temp:', tempTommorow)
+
     except:
         pass
 
