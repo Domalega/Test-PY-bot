@@ -6,3 +6,7 @@ configForBot = {
 configForWeather = {
     'API_WEATHER' : 'd1fb6578d852cd3c84bb4bc1b7881e2c',
 }
+
+url = "KWWSV://JLWKXE.FRP/GRPDOHJD"
+alfavit =  'ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'
+step = -3

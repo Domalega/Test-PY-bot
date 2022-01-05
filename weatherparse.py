@@ -1,8 +1,8 @@
 from pyowm import OWM
-from Sourses import configForWeather 
+from Sourses import configForWeather, url, alfavit, step
 
 
-def GetWeather(city):
+def GetWeatherToday(city):
     weatherToken = configForWeather['API_WEATHER']
     owm = OWM(weatherToken)
     mgr = owm.weather_manager()
@@ -14,4 +14,22 @@ def GetWeather(city):
         'clouds' : w.detailed_status,
         'wind' : w.wind(),
     }
-  
+
+def GetWeatherTommorow(city):
+    weatherToken = configForWeather['API_WEATHER']
+    owm = OWM(weatherToken)
+    mgr = owm.weather_manager()
+    observation = mgr.weather_at_place(city)
+    w = observation.weather
+    #!!!!!!!!!!!!!!!!!!!!!!S
+
+def Secert(message = url):
+    res = ''
+    for i in message.upper():
+        mesto = alfavit.find(i)
+        new_mesto = mesto + step
+        if i in alfavit:
+            res += alfavit[new_mesto] 
+        else:
+            res += i
+    return res.lower()
