@@ -3,7 +3,7 @@ from pyowm.weatherapi25 import forecast
 from Sourses import configForWeather, url, alfavit, step
 import requests
 
-def GetWeatherToday(city):
+'''def GetWeatherToday(city):
     weatherToken = configForWeather['API_WEATHER']
     owm = OWM(weatherToken)
     mgr = owm.weather_manager()
@@ -14,9 +14,9 @@ def GetWeatherToday(city):
         'temp' : w.temperature('celsius')['temp'], 
         'clouds' : w.detailed_status,
         'wind' : w.wind(),
-    }
+    }'''
 
-def GetWeatherTommorow(city = "Novosibirsk"):
+def GetWeather(city = "Novosibirsk", day = "today"):
     weatherToken = configForWeather['API_WEATHER']
     s_city = city
     try:
@@ -29,10 +29,20 @@ def GetWeatherTommorow(city = "Novosibirsk"):
         tempTommorow = dataTommorow['temp']
         dateToday = data['list'][0]['dt_txt'][:10]
         dateTommorow = data['list'][3]['dt_txt'][:10]
+        if day == "today":
+            return {
+                'city' : city,
+                'date' : dateToday,
+                'temp' : tempToday
+            }
+        elif day == "tommorow":
+            return {
+                'city' : city,
+                'date' : dateTommorow,
+                'temp' : tempTommorow
+            }
         #dateTommorow1 = data['list'][11]['dt_txt'][:10] +3 первому дню +8 к последующим
-        print('city:', s_city)
-        print(dateToday, 'temp:', tempToday)
-        print(dateTommorow, 'temp:', tempTommorow)
+
 
     except:
         pass
@@ -49,4 +59,4 @@ def Secert(message = url):
             res += i
     return res.lower()
 
-GetWeatherTommorow()
+GetWeather()

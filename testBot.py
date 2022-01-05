@@ -41,16 +41,22 @@ def Main():
         def GetWeatherBot(message):
             if temp == 1:
                 try:
-                    weatherData = GetWeatherToday(message.text)
-                    bot.send_message(message.chat.id, "City : " + str(weatherData['city']) +'\nTemperature : ' 
-                    + str(weatherData['temp']) +'\nClouds : '
-                    + str(weatherData['clouds']) +'\nWind : '
-                    + str(weatherData['wind']['speed']))
+                    weatherData = GetWeather(message.text, 'today')
+                    print(weatherData)
+                    bot.send_message(message.chat.id, "City : " + str(weatherData['city']) +
+                    "\ndate: " + str(weatherData['date']) +
+                    "\ntemp: " + str(weatherData['temp'])
+                    )
                 except:
                     bot.send_message(message.chat.id, "Ошибка ввода")
             elif temp == 2:
                 try:
-                    bot.send_message(message.chat.id, "Еще не сделанно") 
+                    weatherData = GetWeather(message.text, 'tommorow')
+                    print(weatherData)
+                    bot.send_message(message.chat.id, "City : " + str(weatherData['city']) +
+                    "\ndate: " + str(weatherData['date']) +
+                    "\ntemp: " + str(weatherData['temp'])
+                    ) 
                 except:
                     bot.send_message(message.chat.id, "Ошибка ввода\ Еще не сделанно")  
 
