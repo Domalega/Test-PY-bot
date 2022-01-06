@@ -1,16 +1,16 @@
-from pyowm.weatherapi25 import weather
+from pickle import TRUE
 import telebot
 from telebot import types
-from telebot.types import Message
+from telebot.types import InlineKeyboardButton, Message
 from weatherparse import *
-from Sourses import configForBot, url, alfavit, step
+from Sourses import configForBot
 
 
 def Main():
     bot = telebot.TeleBot(configForBot['API_BOT'])
 
     @bot.message_handler(commands=['start'])
-    def sendWelcome(message):
+    def Welcome(message):
         start_bot = bot.send_message(message.chat.id, 'Страрт работы бота')
 
     @bot.message_handler(commands=['weather'])
@@ -20,16 +20,10 @@ def Main():
 
     def GetDateBot(message):
         city = message.text
-        menuInlineWeather = types.InlineKeyboardMarkup()
-        todayButtonInline = types.InlineKeyboardButton(text = "сегодня", callback_data = "todayChoice")
-        tommorowButtonInline = types.InlineKeyboardButton(text = "завтра", callback_data = "tommorowChoice")
-        menuInlineWeather.add(todayButtonInline, tommorowButtonInline)
-        bot.send_message(message.chat.id, "Выберите на когда хотите узнать прогноз (сегодня/завтра)", reply_markup = menuInlineWeather)
-        
+        bot.send_message(message.chat.id, "Выберите на когда хотите узнать прогноз (сегодня/завтра)")
         bot.register_next_step_handler(message, GetWeatherBot, city)
 
     def GetWeatherBot(message, city):
-        print(city, ' ', message.text)
         try:
             weatherData = GetWeather(city, message.text)
             bot.send_message(message.chat.id, "City : " + str(weatherData['city']) +
@@ -39,15 +33,12 @@ def Main():
         except:
             bot.send_message(message.chat.id, "Ошибка ввода")   
 
-
-
     @bot.message_handler(commands=['help'])
-    def sendHelp(message):
+    def Help(message):
         bot.send_message(message.chat.id, "пока что без помощи")
 
-
     @bot.message_handler(commands=['import_github'])
-    def secret(message):
+    def Secret(message):
         data = Secert()
         bot.send_message(message.chat.id, data)
 

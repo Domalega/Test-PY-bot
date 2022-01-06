@@ -21,7 +21,7 @@ def GetWeather(city = "Novosibirsk", day = "today"):
         day = "today"
     elif day == "завтра":
         day = "tommorow"
-        
+
     weatherToken = configForWeather['API_WEATHER']
     s_city = city
     try:
@@ -32,7 +32,6 @@ def GetWeather(city = "Novosibirsk", day = "today"):
         tempTommorow = data['list'][3]['main']['temp']
         dateToday = data['list'][0]['dt_txt'][:10]
         dateTommorow = data['list'][4]['dt_txt'][:10]
-        print(dateTommorow, " ", dateToday)
         if day == "today":
             return {
                 'city' : city,
