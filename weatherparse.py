@@ -13,22 +13,26 @@ import requests
         'city' : city[0].upper() + city[1:],
         'temp' : w.temperature('celsius')['temp'], 
         'clouds' : w.detailed_status,
-        'wind' : w.wind(),
+        'wind' : w.wind()
     }'''
 
 def GetWeather(city = "Novosibirsk", day = "today"):
+    if day == 'сегодня':
+        day = "today"
+    elif day == "завтра":
+        day = "tommorow"
+        
     weatherToken = configForWeather['API_WEATHER']
     s_city = city
     try:
         resultforecast = requests.get("http://api.openweathermap.org/data/2.5/forecast",
         params={'q': s_city, 'units': 'metric', 'lang': 'ru', 'APPID': weatherToken})
         data = resultforecast.json()
-        dataToday = data['list'][0]['main']
-        dataTommorow = data['list'][3]['main']
-        tempToday = dataToday['temp']
-        tempTommorow = dataTommorow['temp']
+        tempToday =  data['list'][0]['main']['temp']
+        tempTommorow = data['list'][3]['main']['temp']
         dateToday = data['list'][0]['dt_txt'][:10]
-        dateTommorow = data['list'][3]['dt_txt'][:10]
+        dateTommorow = data['list'][4]['dt_txt'][:10]
+        print(dateTommorow, " ", dateToday)
         if day == "today":
             return {
                 'city' : city,

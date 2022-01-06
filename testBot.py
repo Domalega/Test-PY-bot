@@ -11,70 +11,45 @@ def Main():
 
     @bot.message_handler(commands=['start'])
     def sendWelcome(message):
-        menuInlineStart = types.InlineKeyboardMarkup()
-        #menuReply = types.ReplyKeyboardMarkup()
-        #weatherButtonReply = types.KeyboardButton(text = "Узнать погоду")
-        #helpButtonReply =types.KeyboardButton(text = "Помощь")
-        #menuReply.add(weatherButtonReply, helpButtonReply)
-        weatherButtonInline = types.InlineKeyboardButton(text = "Узнать погоду", callback_data = "weatherChoice")
-        helpButtonInline = types.InlineKeyboardButton(text = "Помощь", callback_data = "helpChoice")
-        menuInlineStart.add(weatherButtonInline, helpButtonInline)
-        bot.send_message(message.chat.id, "Старт работы бота", reply_markup = menuInlineStart)
+        start_bot = bot.send_message(message.chat.id, 'Страрт работы бота')
+
+    @bot.message_handler(commands=['weather'])
+    def GetCityBot(message):
+        bot.send_message(message.chat.id, "Введите город")
+        bot.register_next_step_handler(message, GetDateBot)
+
+    def GetDateBot(message):
+        city = message.text
+        menuInlineWeather = types.InlineKeyboardMarkup()
+        todayButtonInline = types.InlineKeyboardButton(text = "сегодня", callback_data = "todayChoice")
+        tommorowButtonInline = types.InlineKeyboardButton(text = "завтра", callback_data = "tommorowChoice")
+        menuInlineWeather.add(todayButtonInline, tommorowButtonInline)
+        bot.send_message(message.chat.id, "Выберите на когда хотите узнать прогноз (сегодня/завтра)", reply_markup = menuInlineWeather)
+        
+        bot.register_next_step_handler(message, GetWeatherBot, city)
+
+    def GetWeatherBot(message, city):
+        print(city, ' ', message.text)
+        try:
+            weatherData = GetWeather(city, message.text)
+            bot.send_message(message.chat.id, "City : " + str(weatherData['city']) +
+            "\ndate: " + str(weatherData['date']) +
+            "\ntemp: " + str(weatherData['temp'])
+            )
+        except:
+            bot.send_message(message.chat.id, "Ошибка ввода")   
+
 
 
     @bot.message_handler(commands=['help'])
     def sendHelp(message):
         bot.send_message(message.chat.id, "пока что без помощи")
 
-    @bot.message_handler(commands=['weather'])
-    def WeatherButtons(message):
-        menuInlineWeather = types.InlineKeyboardMarkup()
-        todayButtonInline = types.InlineKeyboardButton(text = "сегодня", callback_data = "todayChoice")
-        tommorowButtonInline = types.InlineKeyboardButton(text = "завтра", callback_data = "tommorowChoice")
-        menuInlineWeather.add(todayButtonInline, tommorowButtonInline)
-        bot.send_message(message.chat.id, "Выберите на когда хотите узнать прогноз", reply_markup = menuInlineWeather)
-
-    @bot.message_handler(commands=['getWeather'])
-    def sendWeather(message, temp):
-        bot.send_message(message.chat.id, "Введите город в котором хотите узнать погоду")
-        @bot.message_handler(func = lambda m: True)
-        def GetWeatherBot(message):
-            if temp == 1:
-                try:
-                    weatherData = GetWeather(message.text, 'today')
-                    print(weatherData)
-                    bot.send_message(message.chat.id, "City : " + str(weatherData['city']) +
-                    "\ndate: " + str(weatherData['date']) +
-                    "\ntemp: " + str(weatherData['temp'])
-                    )
-                except:
-                    bot.send_message(message.chat.id, "Ошибка ввода")
-            elif temp == 2:
-                try:
-                    weatherData = GetWeather(message.text, 'tommorow')
-                    print(weatherData)
-                    bot.send_message(message.chat.id, "City : " + str(weatherData['city']) +
-                    "\ndate: " + str(weatherData['date']) +
-                    "\ntemp: " + str(weatherData['temp'])
-                    ) 
-                except:
-                    bot.send_message(message.chat.id, "Ошибка ввода\ Еще не сделанно")  
 
     @bot.message_handler(commands=['import_github'])
     def secret(message):
         data = Secert()
         bot.send_message(message.chat.id, data)
-
-    @bot.callback_query_handler(func = lambda call: True)
-    def callbacks(call):
-        if call.data == "weatherChoice":
-            WeatherButtons(call.message)
-        elif call.data == "helpChoice":
-            sendHelp(call.message)
-        elif call.data == "todayChoice":
-            sendWeather(call.message, 1)
-        elif call.data == "tommorowChoice":
-            sendWeather(call.message, 2)
 
     bot.infinity_polling()
 
